@@ -11,9 +11,8 @@ phases:
       - timeout 15 sh -c 'until [ -S /var/run/docker.sock ]; do echo "."; sleep 1; done'
       - echo "Obteniendo credenciales de Docker Hub..."
       # Usamos el comando de la CLI de AWS de forma mas directa para evitar errores
-      - secret_json=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text)
-      - export DOCKER_HUB_USERNAME=$(echo $secret_json | jq -r .docker_username)
-      - export DOCKER_HUB_PASSWORD=$(echo $secret_json | jq -r .docker_password)
+      - DOCKER_HUB_USERNAME=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .docker_username)
+      - DOCKER_HUB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .docker_password)
       - echo "Iniciando sesion en Docker Hub..."
       - echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
       - echo "Autenticandose con Amazon ECR..."
