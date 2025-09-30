@@ -9,10 +9,11 @@ phases:
       - echo "Iniciando el demonio de Docker..."
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
       - timeout 15 sh -c 'until [ -S /var/run/docker.sock ]; do echo "."; sleep 1; done'
+
       - echo "Obteniendo credenciales de Docker Hub..."
-      # Usamos el comando de la CLI de AWS de forma mas directa para evitar errores
       - DOCKER_HUB_USERNAME=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .docker_username)
       - DOCKER_HUB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .docker_password)
+      - echo "Usuario de Docker Hub obtenido: $DOCKER_HUB_USERNAME"
       - echo "Iniciando sesion en Docker Hub..."
       - echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
       - echo "Autenticandose con Amazon ECR..."
