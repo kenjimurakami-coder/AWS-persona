@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://personas-aws-personas.c12eoeiwy86w.us-east-2.rds.amazonaws.com:5432/personas_db
-    username: postgres
-    password: Induccion2025+
+    url: ${/dev/db-url}
+    username: ${/dev/db-credentials.db_username}
+    password: ${/dev/db-credentials.db_password}
     driver-class-name: org.postgresql.Driver
 
   jpa:
